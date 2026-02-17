@@ -1,0 +1,14 @@
+{
+  "name": "intertest",
+  "version": "0.1.0",
+  "description": "Engineering quality disciplines — systematic debugging, test-driven development, and verification gates.",
+  "author": { "name": "MK", "email": "mistakeknot@vibeguider.org" },
+  "repository": "https://github.com/mistakeknot/intertest",
+  "license": "MIT",
+  "keywords": ["tdd", "debugging", "verification", "quality", "testing"],
+  "skills": [
+    "./skills/systematic-debugging",
+    "./skills/test-driven-development",
+    "./skills/verification-before-completion"
+  ]
+}
