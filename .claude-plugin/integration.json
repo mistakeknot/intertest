@@ -1,0 +1,17 @@
+{
+  "ecosystem": "interverse",
+  "interbase_min_version": "1.0.0",
+  "ecosystem_only": false,
+  "standalone_features": [
+    "Systematic debugging discipline",
+    "Test-driven development guidance",
+    "Verification gates before completion claims"
+  ],
+  "integrated_features": [
+    { "feature": "Syntax error stream from intercheck", "requires": "intercheck" }
+  ],
+  "companions": {
+    "recommended": [],
+    "optional": ["intercheck"]
+  }
+}
