@@ -14,6 +14,14 @@ Three skills that enforce process at the moments it matters most — when you're
 
 ## Installation
 
+First, add the [interagency marketplace](https://github.com/mistakeknot/interagency-marketplace) (one-time setup):
+
+```bash
+/plugin marketplace add mistakeknot/interagency-marketplace
+```
+
+Then install the plugin:
+
 ```bash
 /plugin install intertest
 ```
