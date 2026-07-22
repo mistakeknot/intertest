@@ -1,0 +1,19 @@
+{
+  "name": "intertest",
+  "version": "0.1.3",
+  "description": "Engineering quality disciplines — systematic debugging, test-driven development, and verification gates.",
+  "license": "MIT",
+  "keywords": [
+    "tdd",
+    "debugging",
+    "verification",
+    "quality",
+    "testing"
+  ],
+  "author": "MK",
+  "interface": {
+    "displayName": "intertest",
+    "shortDescription": "Engineering quality disciplines — systematic debugging, test-driven development, and verification gates."
+  },
+  "skills": "./skills/"
+}
