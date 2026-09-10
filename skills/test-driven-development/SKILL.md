@@ -27,7 +27,12 @@ when choosing test shape, understanding a failing-first cycle or diagnosing a
 hard-to-test dependency. Read [testing-anti-patterns.md](testing-anti-patterns.md)
 when mocks or test helpers are involved.
 
-Before completion, verify fresh results with
-`intertest:verification-before-completion`. An execution result cannot replace
-required independent acceptance or real host, device, play or production evidence.
-Report missing evidence explicitly and keep its gate outstanding.
+Before claiming work is complete, fixed or passing, and before committing,
+opening a PR or handing off, load `intertest:verification-before-completion`
+(invoke the skill in Claude; read its installed SKILL.md in Codex). Reuse the
+loaded guidance, never stale test results. Run the required checks and inspect
+their fresh results. An observed red-first failure satisfies the regression
+check; do not repeat it through a destructive revert of shared work.
+An execution result cannot replace required independent acceptance or real host,
+device, play or production evidence. Report missing evidence explicitly and keep
+its gate outstanding.
