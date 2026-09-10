@@ -16,7 +16,11 @@ For new behavior, bug fixes and significant refactors, write a meaningful test
 first and observe its expected failure before implementing. The failure must
 expose missing behavior, not a broken test invocation or unavailable dependency.
 If it passes immediately, identify whether the behavior already exists or the
-assertion misses the bug. For an existing bug, reproduce and diagnose first.
+assertion misses the bug. For an existing bug, first load
+`intertest:systematic-debugging`: invoke the skill in Claude, or read its full
+installed SKILL.md in Codex. If that body was already loaded in this session,
+reuse its guidance. Reproduce and diagnose under that guidance before starting
+the red-green cycle.
 
 Implement the smallest correct change. Run the new test, inspect the result, then
 run affected checks. Refactor only while they stay green. Tests should express
