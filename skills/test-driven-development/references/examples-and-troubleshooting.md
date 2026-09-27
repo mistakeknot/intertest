@@ -163,5 +163,6 @@ Next failing test for next feature.
 ## When a test is hard to write
 
 Identify the observable contract, simplify coupling, and isolate only external
-dependencies. Use the sibling testing-anti-patterns.md before introducing mocks.
+dependencies. Use the sibling writing-good-tests.md before writing tests or
+introducing mocks.
 Keep test invocation failures distinct from behavioral failures.

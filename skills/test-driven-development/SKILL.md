@@ -22,8 +22,12 @@ installed SKILL.md in Codex. If that body was already loaded in this session,
 reuse its guidance. Reproduce and diagnose under that guidance before starting
 the red-green cycle.
 
-Implement the smallest correct change. Run the new test, inspect the result, then
-run affected checks. Refactor only while they stay green. Tests should express
+Implement the smallest correct change. Run the new test and inspect the result.
+Then run the project's own test command (whatever the repository documents), even
+when the task named only one test file: a task's scope bounds the deliverable,
+not the verification, and a green file is not a green suite. Report every failure
+that run shows by name, including ones you did not cause; an unmentioned red test
+falsifies the report. Refactor only while they stay green. Tests should express
 observable contracts and edge cases; prefer real components and avoid assertions
 that merely mirror implementation or mocked behavior. Do not add production-only
 seams just to test mocks.
@@ -35,8 +39,8 @@ already authorized. Preserve repository-required checks and independent review.
 
 Read [examples-and-troubleshooting.md](references/examples-and-troubleshooting.md)
 when choosing test shape, understanding a failing-first cycle or diagnosing a
-hard-to-test dependency. Read [testing-anti-patterns.md](testing-anti-patterns.md)
-when mocks or test helpers are involved.
+hard-to-test dependency. Read [writing-good-tests.md](writing-good-tests.md)
+when writing or changing tests, or when mocks or test helpers are involved.
 
 Before claiming work is complete, fixed or passing, and before committing,
 opening a PR or handing off, run the required checks and inspect their fresh

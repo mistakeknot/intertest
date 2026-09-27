@@ -21,7 +21,7 @@ Any new feature, bug fix, refactoring, or behavior change. Exceptions only with 
 2. **GREEN — Write minimal code to pass**
    - Simplest implementation that satisfies the test
    - No extra features, no "while I'm here" improvements
-   - Run it. Confirm this test and all others pass
+   - Run it, then run the project's full test command, not just this file. Report every failure by name, including ones you didn't cause
    - Test still fails? Fix code, not test
 
 3. **REFACTOR — Clean up while green**
@@ -56,4 +56,4 @@ Any new feature, bug fix, refactoring, or behavior change. Exceptions only with 
 Every function has a test, each test failed before implementing, all pass with pristine output, edge cases covered.
 
 ---
-*For code examples, rationalization table, and anti-patterns reference, read SKILL.md.*
+*For examples and troubleshooting, read SKILL.md; for test quality and mocks, read writing-good-tests.md.*
