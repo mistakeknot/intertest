@@ -34,7 +34,7 @@ Any bug, test failure, unexpected behavior, or performance issue — especially 
 4. **Implementation**
    - Create a failing test case first (use TDD skill)
    - Implement a single fix addressing root cause
-   - Verify fix and check no other tests broke
+   - Verify fix and check no other tests broke (verification-before-completion skill before claiming success)
    - **If 3+ fixes failed:** stop — question the architecture, discuss with human partner
 
 ## Red Flags — Return to Phase 1
@@ -51,4 +51,4 @@ Any bug, test failure, unexpected behavior, or performance issue — especially 
 - `condition-based-waiting.md` — replace arbitrary timeouts
 
 ---
-*For examples, rationalizations table, and real-world impact data, read SKILL.md.*
+*For examples and the rationalizations table, read SKILL.md.*
