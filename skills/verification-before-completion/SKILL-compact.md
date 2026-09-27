@@ -46,4 +46,4 @@ Agent:   Agent reports success -> check VCS diff -> verify changes
 ```
 
 ---
-*For rationalization table and real-world failure examples, read SKILL.md.*
+*For the rationalization table and key patterns, read SKILL.md.*
