@@ -165,6 +165,11 @@ should fail for each realistic mutation:
 A mutation nothing catches marks the behavior as unprotected — or the
 test as tautological.
 
+For a new property or guard test, don't only imagine the mutation: plant it
+(see "plant a bug" in SKILL.md), watch the test fail, and undo it. A test
+asserting only that the code equals itself, or that a value was set to what the
+test just set, can't fail this way and is a change-detector, not a test.
+
 ## Quick Reference
 
 | When you... | Do |

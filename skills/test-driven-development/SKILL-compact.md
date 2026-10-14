@@ -51,6 +51,10 @@ Any new feature, bug fix, refactoring, or behavior change. Exceptions only with 
 - Test too complicated? Design too complicated. Simplify interface.
 - Must mock everything? Code too coupled. Use dependency injection.
 
+## Plant a Bug
+
+Tests added after the code, new properties, and tests that pass first run: plant a bug that breaks the named behavior, watch the test fail, undo it, watch it pass. Report the bug and the failing output. Green with the bug planted means fix the test.
+
 ## Verify Before Done
 
 Every function has a test, each test failed before implementing, all pass with pristine output, edge cases covered.
