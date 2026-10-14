@@ -53,7 +53,7 @@ Any new feature, bug fix, refactoring, or behavior change. Exceptions only with 
 
 ## Plant a Bug
 
-Tests added after the code, new properties, and tests that pass first run: plant a bug that breaks the named behavior, watch the test fail, undo it, watch it pass. Report the bug and the failing output. Green with the bug planted means fix the test.
+For tests added after the code, new properties and guards, and tests that pass first run (the one case where tests may follow code; an observed red-first failure already satisfies this step): plant a bug that breaks the named behavior, watch the test fail, undo it, watch it pass. Work on a scratch copy or undo by hand; never destructively revert shared work. Report the bug and the failing output. Green with the bug planted means fix the test. Skip it for reversible prose/config edits, where the relevant validation is enough.
 
 ## Verify Before Done
 

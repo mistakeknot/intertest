@@ -156,7 +156,7 @@ You MUST complete each phase before proceeding to the next.
 
 3. **Verify Before Continuing**
    - Did it work? Yes → Phase 4
-   - Didn't work? Record it as ruled out in the notebook, then form a NEW hypothesis
+   - Didn't work? Record the verdict in the notebook (ruled out, or inconclusive if the test couldn't tell), then form a NEW hypothesis
    - DON'T add more fixes on top
 
 4. **When You Don't Know**

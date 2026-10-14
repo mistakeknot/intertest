@@ -66,7 +66,7 @@ The report that closes the investigation contains:
 
 1. Root cause, and the entry that ruled it in.
 2. **Falsified hypotheses:** every entry marked ruled out, one line each with
-   what ruled it out. Write "none" only if the first hypothesis was ruled in on
-   the first test.
+   what ruled it out. Write "none" when no hypothesis was actually ruled out;
+   inconclusive entries are not falsified, so list them separately if any.
 3. Rate before and after, with the command.
 4. Any `WORKAROUND:` entries that remain.
