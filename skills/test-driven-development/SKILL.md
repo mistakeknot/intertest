@@ -30,8 +30,9 @@ confirm it passes. Do this on a scratch copy or with a change you revert by hand
 never by a destructive revert of shared work. A test that stays green with the bug
 planted is tautological or checks the wrong thing; fix the test, not the bug. The
 red-first failure already satisfies this for a test written before its code, so
-the step applies to tests added after the fact, to properties, and to tests
-that pass on their first run. Report which bug you planted and the failing output.
+the step applies to tests over behavior that already exists (properties,
+invariants, guards, characterization tests) and to any test that passes on its
+first run. It does not let new behavior skip writing its test first. Report which bug you planted and the failing output.
 
 Implement the smallest correct change. Run the new test and inspect the result.
 Then run the project's own test command (whatever the repository documents), even

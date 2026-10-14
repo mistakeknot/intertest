@@ -16,7 +16,7 @@ Any new feature, bug fix, refactoring, or behavior change. Exceptions only with 
    - One behavior per test, clear descriptive name
    - Use real code, not mocks (unless unavoidable)
    - Run it. Confirm it fails for the right reason (missing feature, not typo)
-   - Test passes immediately? You're testing existing behavior — fix the test
+   - Test passes immediately? You're testing existing behavior — fix the test, or if that was the aim (property, guard, characterization test), plant a bug (below) to prove it bites
 
 2. **GREEN — Write minimal code to pass**
    - Simplest implementation that satisfies the test
@@ -38,7 +38,7 @@ Any new feature, bug fix, refactoring, or behavior change. Exceptions only with 
 
 ## Red Flags — Delete Code, Start Over
 
-- Code before test / test after implementation
+- Code before test for new behavior / test written after implementing new behavior
 - Test passes immediately (never saw it fail)
 - "Keep as reference" or "adapt existing code"
 - "I already manually tested it"

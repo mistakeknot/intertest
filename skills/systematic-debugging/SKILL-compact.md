@@ -29,7 +29,7 @@ Any bug, test failure, unexpected behavior, or performance issue — especially 
    - State one hypothesis: "X is root cause because Y"
    - Make the smallest possible change to test it
    - One variable at a time — don't fix multiple things at once
-   - Log each hypothesis in the notebook (hypothesis, exact command, result, ruled in/out); if it fails, form a new hypothesis (don't stack fixes)
+   - Log each hypothesis in the notebook (hypothesis, exact command, result, ruled in/out, or inconclusive if the test couldn't tell); if it fails, form a new hypothesis (don't stack fixes)
 
 4. **Implementation**
    - Create a failing test case first (use TDD skill)
