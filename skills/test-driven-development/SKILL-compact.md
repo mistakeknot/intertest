@@ -53,11 +53,11 @@ Any new feature, bug fix, refactoring, or behavior change. Exceptions only with 
 
 ## Plant a Bug
 
-For tests added after the code, new properties and guards, and tests that pass first run (the one case where tests may follow code; an observed red-first failure already satisfies this step): plant a bug that breaks the named behavior, watch the test fail, undo it, watch it pass. Work on a scratch copy or undo by hand; never destructively revert shared work. Report the bug and the failing output. Green with the bug planted means fix the test. Skip it for reversible prose/config edits, where the relevant validation is enough.
+This does not relax the Iron Law: new behavior still gets its test first. The step is for tests over behavior that already exists (new properties, invariants, guards, characterization tests), which pass on first run, so red-first can't show they bite. An observed red-first failure already satisfies it. Plant a bug that breaks the named behavior, watch the test fail, undo it, watch it pass. Work on a scratch copy or undo by hand; never destructively revert shared work. Report the bug and the failing output. Green with the bug planted means fix the test. Skip it for reversible prose/config edits, where the relevant validation is enough.
 
 ## Verify Before Done
 
-Every function has a test, each test failed before implementing, all pass with pristine output, edge cases covered.
+Every function has a test, each test failed before implementing (or, for a test over existing behavior, failed with a planted bug), all pass with pristine output, edge cases covered.
 
 ---
 *For examples and troubleshooting, read SKILL.md; for test quality and mocks, read writing-good-tests.md.*
