@@ -22,6 +22,18 @@ installed SKILL.md in Codex. If that body was already loaded in this session,
 reuse its guidance. Reproduce and diagnose under that guidance before starting
 the red-green cycle.
 
+Before you trust a new property, invariant or guard test, plant a bug: make a
+temporary change to the production code that breaks exactly the behavior the test
+names (flip the condition, return the default, drop the side effect), run the
+test, and confirm it fails with the message you expect. Then undo the change and
+confirm it passes. Do this on a scratch copy or with a change you revert by hand,
+never by a destructive revert of shared work. A test that stays green with the bug
+planted is tautological or checks the wrong thing; fix the test, not the bug. The
+red-first failure already satisfies this for a test written before its code, so
+the step applies to tests over behavior that already exists (properties,
+invariants, guards, characterization tests) and to any test that passes on its
+first run. It does not let new behavior skip writing its test first. Report which bug you planted and the failing output.
+
 Implement the smallest correct change. Run the new test and inspect the result.
 Then run the project's own test command (whatever the repository documents), even
 when the task named only one test file: a task's scope bounds the deliverable,

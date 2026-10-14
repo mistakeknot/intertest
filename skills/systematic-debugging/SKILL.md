@@ -56,7 +56,7 @@ You MUST complete each phase before proceeding to the next.
    - Note line numbers, file paths, error codes
 
 2. **Reproduce Consistently**
-   - Can you trigger it reliably?
+   - Can you trigger it reliably? Record the rate (failures out of runs) and the exact command
    - What are the exact steps?
    - Does it happen every time?
    - If not reproducible → gather more data, don't guess
@@ -146,7 +146,7 @@ You MUST complete each phase before proceeding to the next.
 
 1. **Form Single Hypothesis**
    - State clearly: "I think X is the root cause because Y"
-   - Write it down
+   - Write it down in the investigation notebook (`investigation-notebook.md`) before you test it
    - Be specific, not vague
 
 2. **Test Minimally**
@@ -156,7 +156,7 @@ You MUST complete each phase before proceeding to the next.
 
 3. **Verify Before Continuing**
    - Did it work? Yes → Phase 4
-   - Didn't work? Form NEW hypothesis
+   - Didn't work? Record the verdict in the notebook (ruled out, or inconclusive if the test couldn't tell), then form a NEW hypothesis
    - DON'T add more fixes on top
 
 4. **When You Don't Know**
@@ -183,6 +183,7 @@ You MUST complete each phase before proceeding to the next.
    - No bundled refactoring
 
 3. **Verify Fix**
+   - Re-run the Phase 1 reproduction with the same command and number of runs, and record the rate after
    - Test passes now?
    - No other tests broken?
    - Issue actually resolved?
@@ -274,10 +275,18 @@ If systematic investigation reveals issue is truly environmental, timing-depende
 
 **But:** 95% of "no root cause" cases are incomplete investigation.
 
+## Reporting
+
+The report that closes an investigation must include a **Falsified hypotheses**
+section (each hypothesis the notebook ruled out, with what ruled it out), the
+reproduction rate before and after the fix, and any timeout, retry or skipped
+check labeled as a workaround. Use the template in `investigation-notebook.md`.
+
 ## Supporting Techniques
 
 These techniques are part of systematic debugging and available in this directory:
 
+- **`investigation-notebook.md`** - Notebook template: bound the symptom, reproduce with a rate, one hypothesis per entry, label workarounds, report the rate after
 - **`root-cause-tracing.md`** - Trace bugs backward through call stack to find original trigger
 - **`defense-in-depth.md`** - Add validation at multiple layers after finding root cause
 - **`condition-based-waiting.md`** - Replace arbitrary timeouts with condition polling

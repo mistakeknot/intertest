@@ -14,7 +14,7 @@ Any bug, test failure, unexpected behavior, or performance issue — especially 
 
 1. **Root Cause Investigation**
    - Read error messages completely (line numbers, stack traces, error codes)
-   - Reproduce consistently — if not reproducible, gather more data
+   - Reproduce consistently with a rate (failures/runs) and the exact command — if not reproducible, gather more data
    - Check recent changes (git diff, deps, config, environment)
    - In multi-component systems: add diagnostic logging at each boundary, run once, identify failing layer
    - Trace data flow backward from symptom to source
@@ -29,11 +29,13 @@ Any bug, test failure, unexpected behavior, or performance issue — especially 
    - State one hypothesis: "X is root cause because Y"
    - Make the smallest possible change to test it
    - One variable at a time — don't fix multiple things at once
-   - If it fails, form a new hypothesis (don't stack fixes)
+   - Log each hypothesis in the notebook (hypothesis, exact command, result, ruled in/out, or inconclusive if the test couldn't tell); if it fails, form a new hypothesis (don't stack fixes)
 
 4. **Implementation**
    - Create a failing test case first (use TDD skill)
    - Implement a single fix addressing root cause
+   - Re-run the same reproduction and report the rate after; label any timeout or retry as a workaround
+   - Report must have a **Falsified hypotheses** section
    - Verify fix and check no other tests broke (verification-before-completion skill before claiming success)
    - **If 3+ fixes failed:** stop — question the architecture, discuss with human partner
 
@@ -47,6 +49,7 @@ Any bug, test failure, unexpected behavior, or performance issue — especially 
 ## Supporting Techniques
 
 - `root-cause-tracing.md` — backward call-stack tracing
+- `investigation-notebook.md` — notebook template and report shape
 - `defense-in-depth.md` — multi-layer validation
 - `condition-based-waiting.md` — replace arbitrary timeouts
 
