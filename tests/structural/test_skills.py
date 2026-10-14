@@ -54,6 +54,9 @@ def test_tdd_skills_require_planting_a_bug():
     """Both TDD skill bodies keep the plant-a-bug step."""
     tdd = SKILLS_DIR / "test-driven-development"
     for name in ("SKILL.md", "SKILL-compact.md"):
-        assert "plant a bug" in (tdd / name).read_text().lower(), (
-            f"{name} lost the plant-a-bug step"
-        )
+        text = (tdd / name).read_text()
+        if name == "SKILL.md":
+            assert "plant a bug" in text.lower(), f"{name} lost the plant-a-bug step"
+        else:
+            assert "## Plant a Bug" in text, f"{name} lost its Plant a Bug section"
+            assert "watch the test fail" in text, f"{name} lost the fail-then-undo instruction"

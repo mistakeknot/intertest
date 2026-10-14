@@ -4,11 +4,11 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 ## When to Invoke
 
-Any new feature, bug fix, refactoring, or behavior change. Exceptions only with human partner approval (prototypes, generated code, config).
+Any new feature, bug fix, refactoring, or behavior change. Reversible prose/config edits need their relevant validation, not a behavioral test. Other exceptions (prototypes, generated code) need human partner approval.
 
 ## Iron Law
 
-**No production code without a failing test first.** Code written before the test? Delete it. Don't keep as "reference."
+**No production code without a failing test first.** Code for new behavior written before its test? Delete it. Don't keep as "reference."
 
 ## Red-Green-Refactor Cycle
 
