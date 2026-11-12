@@ -57,27 +57,22 @@ You MUST complete each phase before proceeding to the next.
    - **Done when:** The exact symptom and its location are recorded.
 
 2. **Reproduce Consistently**
-   - Build one command that fails on this exact bug and finishes in seconds.
-   - Run it, then repeat it; record the command, elapsed time, and failures/runs.
-   - Gather evidence and control inputs until each run yields the same failure.
+   - Build one command that exposes this exact bug, aiming for a run measured in seconds.
+   - For intermittent failures, use a bounded loop that reports failures/runs; record its attempt limit and elapsed time. The rate can vary between runs.
+   - Run the command and record the observed failure. If a fast reproduction is impractical, record why and use the fastest available command.
    - Begin causal explanations only after this command is established.
-   - **Done when:** The command has run and repeated with the same bug-specific failure in seconds.
+   - **Done when:** One executed command exposes this bug, with its failure count, run count, elapsed time, and any speed limitation recorded.
 
-3. **Shrink the Failing Case**
-   - Remove inputs, setup, and operations one at a time, rerunning the command after each reduction.
-   - Keep each reduction that preserves the exact failure; restore parts needed to trigger it.
-   - **Done when:** Removing any remaining part loses the failure, and the reduced command still fails consistently in seconds.
-
-4. **Check Recent Changes**
+3. **Check Recent Changes**
    - What changed that could cause this?
    - Git diff, recent commits
    - New dependencies, config changes
    - Environmental differences
    - **Done when:** Relevant changes and environmental differences are recorded.
 
-5. **Gather Evidence in Multi-Component Systems**
+4. **Gather Evidence in Multi-Component Systems**
 
-   Use `DEBUG-TEMP:` on every temporary debug log, including added diagnostic output below. Find all sites with `rg -n 'DEBUG-TEMP:'` for cleanup.
+   Use `DEBUG-TEMP:` on every temporary debug log in source, or on both ends of a temporary diagnostic block. Find all sites from the repository root with `rg -n --hidden 'DEBUG-TEMP:' .` for cleanup.
 
    **WHEN system has multiple components (CI → build → signing, API → service → database):**
 
@@ -96,6 +91,8 @@ You MUST complete each phase before proceeding to the next.
 
    **Example (multi-layer system):**
    ```bash
+   # DEBUG-TEMP: begin temporary diagnostic block
+   set -o pipefail
    {
    # Layer 1: Workflow
    echo "=== Secrets available in workflow: ==="
@@ -113,12 +110,13 @@ You MUST complete each phase before proceeding to the next.
    # Layer 4: Actual signing
    codesign --sign "$IDENTITY" --verbose=4 "$APP"
    } 2>&1 | sed 's/^/DEBUG-TEMP: /'
+   # DEBUG-TEMP: end temporary diagnostic block
    ```
 
    **This reveals:** Which layer fails (secrets → workflow ✓, workflow → build ✗)
    - **Done when:** Boundary evidence locates the failing layer, or the system is confirmed to have one component; every temporary log carries the prefix.
 
-6. **Trace Data Flow**
+5. **Trace Data Flow**
 
    **WHEN error is deep in call stack:**
 
@@ -131,7 +129,12 @@ You MUST complete each phase before proceeding to the next.
    - Fix at source, not at symptom
    - **Done when:** The bad value is traced to its origin, or the error is confirmed to be local.
 
-**Phase 1 exit:** Keep the executed, repeatable, seconds-long failing command available for every later experiment.
+6. **Shrink the Failing Case**
+   - Use the change history and traced path to choose reductions. Remove inputs, setup, and operations one at a time, rerunning the command after each reduction.
+   - Keep reductions that preserve the same bug; restore necessary parts. For intermittent failures, compare against the baseline with the same attempt limit; gather more observations when a missing failure is inconclusive.
+   - **Done when:** Each remaining part has been checked and is needed to expose the bug; the reduced command and its failure rate are recorded.
+
+**Phase 1 exit — done when:** One executed command exposes this bug with counts, timing, and any speed limitation recorded; every remaining part of the reduced case is needed; the failing path is traced or the error is confirmed to be local. Keep this command for later experiments.
 
 ### Phase 2: Pattern Analysis
 
@@ -177,7 +180,6 @@ You MUST complete each phase before proceeding to the next.
    - **Done when:** One controlled experiment has a recorded command and result.
 
 3. **Verify Before Continuing**
-   - Did it work? Yes → Phase 4
    - Record whether the prediction was supported, ruled out, or inconclusive; advance to Phase 4 only with evidence identifying the cause.
    - Restore the experimental change before testing the next ranked guess. If the list is exhausted, return to evidence gathering and write a fresh ranked list before testing again.
    - **Done when:** The notebook records a verdict and evidence, with either a supported cause or the next investigation step identified.
@@ -214,7 +216,7 @@ You MUST complete each phase before proceeding to the next.
    - No other tests broken?
    - Issue actually resolved?
    - Use the `intertest:verification-before-completion` skill before claiming success
-   - Remove temporary diagnostics found with `rg -n 'DEBUG-TEMP:'`; inspect every match, keeping only permanent skill instructions that describe this prefix.
+   - From the repository root, find temporary diagnostics with `rg -n --hidden 'DEBUG-TEMP:' .`. Remove tagged temporary statements and entire marked diagnostic blocks, retaining the underlying operation. Inspect every match, keeping permanent skill instructions that describe this prefix.
    - **Done when:** The original command and relevant tests pass, the after-rate is recorded, and the prefix search finds no temporary diagnostic sites.
 
 4. **If Fix Doesn't Work**
@@ -289,7 +291,7 @@ If you catch yourself thinking:
 
 | Phase | Key Activities | Success Criteria |
 |-------|---------------|------------------|
-| **1. Root Cause** | Read errors, reproduce, shrink, check changes, gather evidence | Executed command fails on this bug consistently in seconds |
+| **1. Root Cause** | Read errors, reproduce, check changes, trace, shrink | Executed bug-specific command, failure rate, timing, and necessary case parts recorded |
 | **2. Pattern** | Find working examples, compare | Identify differences |
 | **3. Hypothesis** | Rank 3 to 5 falsifiable guesses, test one at a time | Recorded verdicts and an evidenced cause |
 | **4. Implementation** | Create test, fix, verify | Bug resolved, tests pass |

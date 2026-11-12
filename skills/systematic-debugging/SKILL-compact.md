@@ -14,12 +14,12 @@ Any bug, test failure, unexpected behavior, or performance issue — especially 
 
 1. **Root Cause Investigation**
    - Read error messages completely (line numbers, stack traces, error codes)
-   - Establish one command that fails on this exact bug in seconds; run and repeat it, recording elapsed time and failures/runs. Gather evidence until each run gives the same failure. Begin causal explanations after this gate.
-   - Shrink inputs, setup, and operations one part at a time; rerun after each reduction and keep reductions that preserve the exact failure
+   - Establish one command that exposes this exact bug, aiming for seconds. For intermittent bugs, use a bounded loop reporting failures/runs, its attempt limit, and elapsed time; rates may vary. Run it and record the failure. If a fast reproduction is impractical, record why and use the fastest available command. Begin causal explanations after this gate.
    - Check recent changes (git diff, deps, config, environment)
-   - In multi-component systems: add diagnostic logging at each boundary, run once, identify failing layer. Prefix every temporary debug log with `DEBUG-TEMP:` for one-search cleanup.
+   - In multi-component systems: add diagnostic logging at each boundary, run once, identify failing layer. Mark every temporary log in source with `DEBUG-TEMP:`, or tag both ends of a temporary diagnostic block.
    - Trace data flow backward from symptom to source
-   - **Done when:** The command has run and repeated with the same bug-specific failure in seconds, every remaining part of the case is necessary, and the failing path is traced.
+   - After inspecting changes and tracing, shrink inputs, setup, and operations one part at a time; keep reductions preserving the same bug. For intermittent failures, compare with the baseline at the same attempt limit and gather more observations when inconclusive.
+   - **Done when:** One executed command exposes this bug with counts, timing, and any speed limitation recorded; every remaining part of the reduced case is needed; the failing path is traced or the error is confirmed to be local. Keep this command for later experiments.
 
 2. **Pattern Analysis**
    - Find working examples of similar code in the codebase
@@ -41,7 +41,7 @@ Any bug, test failure, unexpected behavior, or performance issue — especially 
    - Re-run the same reproduction and report the rate after; label any timeout or retry as a workaround
    - Report must have a **Falsified hypotheses** section
    - Verify fix and check no other tests broke (verification-before-completion skill before claiming success)
-   - Find temporary diagnostics with `rg -n 'DEBUG-TEMP:'` and remove each site; retain permanent skill instructions describing the prefix
+   - From the repository root, run `rg -n --hidden 'DEBUG-TEMP:' .`; remove tagged temporary statements and entire marked diagnostic blocks, retaining the underlying operation and permanent skill instructions describing the prefix
    - **If 3+ fixes failed:** stop — question the architecture, discuss with human partner
    - **Done when:** The reproduction and relevant tests pass and the prefix search finds no temporary logs; after three failed fixes, further fixes wait for architectural discussion and an agreed next action.
 
