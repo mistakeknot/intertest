@@ -50,24 +50,34 @@ You MUST complete each phase before proceeding to the next.
 **BEFORE attempting ANY fix:**
 
 1. **Read Error Messages Carefully**
-   - Don't skip past errors or warnings
+   - Read each error and warning
    - They often contain the exact solution
    - Read stack traces completely
    - Note line numbers, file paths, error codes
+   - **Done when:** The exact symptom and its location are recorded.
 
 2. **Reproduce Consistently**
-   - Can you trigger it reliably? Record the rate (failures out of runs) and the exact command
-   - What are the exact steps?
-   - Does it happen every time?
-   - If not reproducible → gather more data, don't guess
+   - Build one command that fails on this exact bug and finishes in seconds.
+   - Run it, then repeat it; record the command, elapsed time, and failures/runs.
+   - Gather evidence and control inputs until each run yields the same failure.
+   - Begin causal explanations only after this command is established.
+   - **Done when:** The command has run and repeated with the same bug-specific failure in seconds.
 
-3. **Check Recent Changes**
+3. **Shrink the Failing Case**
+   - Remove inputs, setup, and operations one at a time, rerunning the command after each reduction.
+   - Keep each reduction that preserves the exact failure; restore parts needed to trigger it.
+   - **Done when:** Removing any remaining part loses the failure, and the reduced command still fails consistently in seconds.
+
+4. **Check Recent Changes**
    - What changed that could cause this?
    - Git diff, recent commits
    - New dependencies, config changes
    - Environmental differences
+   - **Done when:** Relevant changes and environmental differences are recorded.
 
-4. **Gather Evidence in Multi-Component Systems**
+5. **Gather Evidence in Multi-Component Systems**
+
+   Use `DEBUG-TEMP:` on every temporary debug log, including added diagnostic output below. Find all sites with `rg -n 'DEBUG-TEMP:'` for cleanup.
 
    **WHEN system has multiple components (CI → build → signing, API → service → database):**
 
@@ -86,6 +96,7 @@ You MUST complete each phase before proceeding to the next.
 
    **Example (multi-layer system):**
    ```bash
+   {
    # Layer 1: Workflow
    echo "=== Secrets available in workflow: ==="
    echo "IDENTITY: ${IDENTITY:+SET}${IDENTITY:-UNSET}"
@@ -101,11 +112,13 @@ You MUST complete each phase before proceeding to the next.
 
    # Layer 4: Actual signing
    codesign --sign "$IDENTITY" --verbose=4 "$APP"
+   } 2>&1 | sed 's/^/DEBUG-TEMP: /'
    ```
 
    **This reveals:** Which layer fails (secrets → workflow ✓, workflow → build ✗)
+   - **Done when:** Boundary evidence locates the failing layer, or the system is confirmed to have one component; every temporary log carries the prefix.
 
-5. **Trace Data Flow**
+6. **Trace Data Flow**
 
    **WHEN error is deep in call stack:**
 
@@ -116,6 +129,9 @@ You MUST complete each phase before proceeding to the next.
    - What called this with bad value?
    - Keep tracing up until you find the source
    - Fix at source, not at symptom
+   - **Done when:** The bad value is traced to its origin, or the error is confirmed to be local.
+
+**Phase 1 exit:** Keep the executed, repeatable, seconds-long failing command available for every later experiment.
 
 ### Phase 2: Pattern Analysis
 
@@ -124,46 +140,54 @@ You MUST complete each phase before proceeding to the next.
 1. **Find Working Examples**
    - Locate similar working code in same codebase
    - What works that's similar to what's broken?
+   - **Done when:** A comparable working path is identified, or its absence is recorded.
 
 2. **Compare Against References**
    - If implementing pattern, read reference implementation COMPLETELY
    - Don't skim - read every line
    - Understand the pattern fully before applying
+   - **Done when:** The relevant reference is read completely and its behavior is explained.
 
 3. **Identify Differences**
    - What's different between working and broken?
    - List every difference, however small
    - Don't assume "that can't matter"
+   - **Done when:** The working and failing paths have an explicit difference list.
 
 4. **Understand Dependencies**
    - What other components does this need?
    - What settings, config, environment?
    - What assumptions does it make?
+   - **Done when:** Required components, settings, and assumptions are listed.
 
 ### Phase 3: Hypothesis and Testing
 
 **Scientific method:**
 
-1. **Form Single Hypothesis**
-   - State clearly: "I think X is the root cause because Y"
-   - Write it down in the investigation notebook (`investigation-notebook.md`) before you test it
-   - Be specific, not vague
+1. **Rank 3 to 5 Guesses**
+   - Write 3 to 5 specific possible causes in the investigation notebook (`investigation-notebook.md`), ordered by supporting evidence.
+   - Give each guess a predicted observation and a result that would disprove it.
+   - Complete the ranked list before testing any guess.
+   - **Done when:** The notebook contains 3 to 5 ranked causes, each with a falsifiable prediction, before the first experiment.
 
 2. **Test Minimally**
    - Make the SMALLEST possible change to test hypothesis
    - One variable at a time
-   - Don't fix multiple things at once
+   - Test the highest-ranked remaining guess with the Phase 1 command.
+   - **Done when:** One controlled experiment has a recorded command and result.
 
 3. **Verify Before Continuing**
    - Did it work? Yes → Phase 4
-   - Didn't work? Record the verdict in the notebook (ruled out, or inconclusive if the test couldn't tell), then form a NEW hypothesis
-   - DON'T add more fixes on top
+   - Record whether the prediction was supported, ruled out, or inconclusive; advance to Phase 4 only with evidence identifying the cause.
+   - Restore the experimental change before testing the next ranked guess. If the list is exhausted, return to evidence gathering and write a fresh ranked list before testing again.
+   - **Done when:** The notebook records a verdict and evidence, with either a supported cause or the next investigation step identified.
 
 4. **When You Don't Know**
    - Say "I don't understand X"
    - Don't pretend to know
    - Ask for help
    - Research more
+   - **Done when:** The knowledge gap and the evidence or help needed to resolve it are explicit.
 
 ### Phase 4: Implementation
 
@@ -175,12 +199,14 @@ You MUST complete each phase before proceeding to the next.
    - One-off test script if no framework
    - MUST have before fixing
    - Use the `intertest:test-driven-development` skill for writing proper failing tests
+   - **Done when:** A regression test runs and fails on the reduced case.
 
 2. **Implement Single Fix**
    - Address the root cause identified
    - ONE change at a time
    - No "while I'm here" improvements
    - No bundled refactoring
+   - **Done when:** One change addresses the evidenced root cause.
 
 3. **Verify Fix**
    - Re-run the Phase 1 reproduction with the same command and number of runs, and record the rate after
@@ -188,6 +214,8 @@ You MUST complete each phase before proceeding to the next.
    - No other tests broken?
    - Issue actually resolved?
    - Use the `intertest:verification-before-completion` skill before claiming success
+   - Remove temporary diagnostics found with `rg -n 'DEBUG-TEMP:'`; inspect every match, keeping only permanent skill instructions that describe this prefix.
+   - **Done when:** The original command and relevant tests pass, the after-rate is recorded, and the prefix search finds no temporary diagnostic sites.
 
 4. **If Fix Doesn't Work**
    - STOP
@@ -195,6 +223,7 @@ You MUST complete each phase before proceeding to the next.
    - If < 3: Return to Phase 1, re-analyze with new information
    - **If ≥ 3: STOP and question the architecture (step 5 below)**
    - DON'T attempt Fix #4 without architectural discussion
+   - **Done when:** The failed-fix count is recorded and investigation resumes, or three failures trigger step 5.
 
 5. **If 3+ Fixes Failed: Question Architecture**
 
@@ -211,6 +240,7 @@ You MUST complete each phase before proceeding to the next.
    **Discuss with your human partner before attempting more fixes**
 
    This is NOT a failed hypothesis - this is a wrong architecture.
+   - **Done when:** After three failed fixes, your human partner has discussed the architecture and agreed the next action before another fix.
 
 ## Red Flags - STOP and Follow Process
 
@@ -259,9 +289,9 @@ If you catch yourself thinking:
 
 | Phase | Key Activities | Success Criteria |
 |-------|---------------|------------------|
-| **1. Root Cause** | Read errors, reproduce, check changes, gather evidence | Understand WHAT and WHY |
+| **1. Root Cause** | Read errors, reproduce, shrink, check changes, gather evidence | Executed command fails on this bug consistently in seconds |
 | **2. Pattern** | Find working examples, compare | Identify differences |
-| **3. Hypothesis** | Form theory, test minimally | Confirmed or new hypothesis |
+| **3. Hypothesis** | Rank 3 to 5 falsifiable guesses, test one at a time | Recorded verdicts and an evidenced cause |
 | **4. Implementation** | Create test, fix, verify | Bug resolved, tests pass |
 
 ## When Process Reveals "No Root Cause"
